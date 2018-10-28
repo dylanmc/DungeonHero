@@ -47,6 +47,84 @@ def describeLocation(l):
         m = l['occupant']
         print("There is a " + m['desc'] + " in the room with you")
 
+def handleBattle(loc, p):
+    if 'occupant' in loc and not loc['occupant'] == None:
+        monster = loc['occupant']
+        if monster['hostile']:
+            print(monster['desc'] + " attacks!")
+            """
+            monsterName = random.choice(list(monsters.monsters.keys()))
+            monster = monsters.monsters[monsterName]
+            monster['desc'] = monsterName
+            print("A " + monster['desc'] + " jumps in front of you!")
+            """
+            battle = True
+            while battle:
+                line = input("(In battle) what do you do? ")
+                words = line.split(" ")
+                cmd = words[0]
+                if cmd == 'help':
+                    print("attack, dodge, defend, focus, flee are your options")
+                elif cmd == 'attack':
+                    print("you attack the monster")
+                    # TODO: roll a die and check for crit success/failure
+                    if (p['speed'] < monster['speed']) :
+                        # monster has advantage
+                        p['health'] = p['health'] - monster['attack']
+                        if (p['health'] <= 0) :
+                            print("You died.")
+                            sys.exit(0);
+                        monster['health'] = monster['health'] - p['attack']
+                        if (monster['health'] <= 0):
+                            print("You killed the " + monster['desc'] + "!")
+                            loc['occupant'] = None
+                            loc['inventory'] = "a dead monster"
+                            battle = False
+                    else:
+                        # player has advantage
+                        monster['health'] = monster['health'] - p['attack']
+                        if (monster['health'] <= 0):
+                            print("You killed the " + monster['desc'] + "!")
+                            battle = False
+                        p['health'] = p['health'] - monster['attack']
+                        if (p['health'] <= 0) :
+                            print("You died.")
+                            sys.exit(0);
+
+                elif cmd == 'dodge' :
+                    print("you dodge")
+                elif cmd == 'defend' :
+                    # you know...
+                    print("you defend")
+                elif cmd == 'focus' :
+                    # more stuff
+                    print("you sit down with your pocket calculator and focus")
+                elif cmd == 'flee' :
+                    if monster['speed'] > p['speed']:
+                        print("Sorry, your adversary is too fast for you")
+                    else:
+                        dir = words[1]
+                        print("You try to flee " + dir)
+                        if (dir in loc['passages']) :
+                            loc = cave_map.rooms[(loc['passages'])[dir]]
+                            battle = False
+                            monster = None
+                            if not ('seen' in loc):
+                                print(" and you narrowly escape")
+                                print(loc['desc'])
+                                loc['seen'] = True
+                            break
+                        else:
+                            print(" but you run into a wall instead")
+
+
+                print("Your health is " + str(p['health']))
+                print("The " + monster['desc'] + "'s health is " + str(monster['health']))
+    # the battle is over
+    monster = None
+    return loc
+
+# this is the main program
 while stillPlaying:
     if not ('seen' in location):
         location['seen'] = True
@@ -85,77 +163,5 @@ while stillPlaying:
     else :
         print("I don't know what you mean")
 
-    if 'occupant' in location and not location['occupant'] == None:
-        monster = location['occupant']
-        if monster['hostile']:
-            print(monster['desc'] + " attacks!")
-            """
-            monsterName = random.choice(list(monsters.monsters.keys()))
-            monster = monsters.monsters[monsterName]
-            monster['desc'] = monsterName
-            print("A " + monster['desc'] + " jumps in front of you!")
-            """
-            battle = True
-            while battle:
-                line = input("(In battle) what do you do? ")
-                words = line.split(" ")
-                cmd = words[0]
-                if cmd == 'help':
-                    print("attack, dodge, defend, focus, flee are your options")
-                elif cmd == 'attack':
-                    print("you attack the monster")
-                    # TODO: roll a die and see if there are crit damage
-                    if (player['speed'] < monster['speed']) :
-                        # monster has advantage
-                        player['health'] = player['health'] - monster['attack']
-                        if (monsters.player['health'] <= 0) :
-                            print("You died.")
-                            sys.exit(0);
-                        monster['health'] = monster['health'] - player['attack']
-                        if (monster['health'] <= 0):
-                            print("You killed the " + monster['desc'] + "!")
-                            location['occupant'] = None
-                            location['inventory'] = "a dead monster"
-                            battle = False
-                    else:
-                        # player has advantage
-                        monster['health'] = monster['health'] - player['attack']
-                        if (monster['health'] <= 0):
-                            print("You killed the " + monster['desc'] + "!")
-                            battle = False
-                        player['health'] = player['health'] - monster['attack']
-                        if (player['health'] <= 0) :
-                            print("You died.")
-                            sys.exit(0);
+    location = handleBattle(location, player)
 
-                elif cmd == 'dodge' :
-                    print("you dodge")
-                elif cmd == 'defend' :
-                    # you know...
-                    print("you defend")
-                elif cmd == 'focus' :
-                    # more stuff
-                    print("you sit down with your pocket calculator and focus")
-                elif cmd == 'flee' :
-                    if monster['speed'] > player['speed']:
-                        print("Sorry, your adversary is too fast for you")
-                    else:
-                        dir = words[1]
-                        print("You try to flee " + dir)
-                        if (dir in location['passages']) :
-                            location = cave_map.rooms[(location['passages'])[dir]]
-                            battle = False
-                            monster = None
-                            if not ('seen' in location):
-                                print(" and you narrowly escape")
-                                print(location['desc'])
-                                location['seen'] = True
-                            break
-                        else:
-                            print(" but you run into a wall instead")
-
-
-                print("Your health is " + str(player['health']))
-                print("The " + monster['desc'] + "'s health is " + str(monster['health']))
-    # the battle is over
-    monster = None
