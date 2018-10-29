@@ -28,11 +28,13 @@ def makeOccupants(loc):
     if not 'occupant' in loc:
         if 'make_occupant' in loc:
             loc['occupant'] = dict(monsters.monsters[loc['make_occupant']])
+"""
         elif 'occupants' in loc:
             if loc['hostile']:
                 print("making a monster")
             else:
                 print("making a friend")
+"""
 
 def enterRoom(loc, d):
     if (d in loc['passages']) :
@@ -43,6 +45,10 @@ def enterRoom(loc, d):
 
 def describeLocation(l):
     print(l['desc'])
+    print("There are exits in these directions: ", end="")
+    for exit in location['passages']:
+        print(exit + " ", end="")
+    print("")
     if 'occupant' in l and not l['occupant'] == None:
         m = l['occupant']
         print("There is a " + m['desc'] + " in the room with you")
@@ -140,11 +146,7 @@ while stillPlaying:
             print (str(i) + ": " + inventory[i])
         print ("you have equipped your " + inventory[equipped])
     elif (cmd == 'look') :
-        print(location['desc']);
-        print("There are exits in these directions: ", end="")
-        for exit in location['passages']:
-            print(exit + " ", end="")
-        print("")
+        describeLocation(location)
     elif (cmd == 'equip'):
         equipped = int(words[1])
     elif (cmd == 'quit') :

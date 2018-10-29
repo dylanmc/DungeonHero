@@ -21,6 +21,16 @@ def getRoom(rooms, name):
     ret['tag'] = name
     return ret
 
+def describeLocation(l):
+    print(l['desc'])
+    print("There are exits in these directions: ", end="")
+    for exit in location['passages']:
+        print(exit + " ", end="")
+    print("")
+    if 'occupant' in l and not l['occupant'] == None:
+        m = l['occupant']
+        print("There is a " + m['desc'] + " in the room with you")
+
 location = getRoom(cave_map.rooms, "entrance_r")
 
 monster = None
@@ -37,6 +47,7 @@ opposites.update(additions)
 
 try:
     while stillPlaying:
+        describeLocation(location)
         line = input("what do you do? ")
         words = line.split(" ")
         cmd = words[0]
@@ -84,7 +95,7 @@ try:
             for r in cave_map.rooms:
                 out_str += "    '" + str(r) + "' : " + str(cave_map.rooms[r]) + ",\n"
             out_str = out_str + "}\n"
-           #/ + str(cave_map.rooms)
+            #/ + str(cave_map.rooms)
             fileh.write(out_str)
             fileh.close()
 
