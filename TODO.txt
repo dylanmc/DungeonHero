@@ -1,0 +1,12 @@
+Want to add:
+
+weapons have damage and speed modifiers - implement as a dictionary
+keyed by weapon names.
+
+flesh out the map to include the city, Quinton.
+
+implement doors, locks, keys
+
+have monsters drop their inventory in a room when they die
+
+implement peaceful villagers
