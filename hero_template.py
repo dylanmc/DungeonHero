@@ -10,7 +10,6 @@ import monsters
 import time
 
 stillPlaying = True
-inventory = ["great sword", "musket", "short sword", "mace", "cup of tea", "pocket calculator" ]
 equipped = 0
 timePassed = False
 battle = False
@@ -18,6 +17,7 @@ playerHealth = 10
 location = cave_map.rooms["entrance_r"]
 monster = None
 player = monsters.player
+player['inventory'] = ["cup of tea", "your favorite book" ]
 
 # doctor up our monsters:
 for m in monsters.monsters :
@@ -49,9 +49,29 @@ def describeLocation(l):
     for exit in location['passages']:
         print(exit + " ", end="")
     print("")
+    if 'inventory' in l and not l['inventory'] == None:
+        print("Stuff in this room: ")
+        for item in l['inventory']:
+            print(" " + item, end="")
+        print("")
     if 'occupant' in l and not l['occupant'] == None:
         m = l['occupant']
         print("There is a " + m['desc'] + " in the room with you")
+
+def addInventory(l, item):
+    if not ('inventory' in l or l['inventory'] == None):
+        l['inventory'] = []
+    l['inventory'].append(item)
+
+def equippedItem(p):
+    return p['inventory'][equipped]
+
+def take(l, p, item):
+    if not ('inventory' in l or l['inventory'] == None):
+        print("that's not in this room!")
+    else:
+        l['inventory'].remove(item)
+        p['inventory'].append(item)
 
 def handleBattle(loc, p):
     if 'occupant' in loc and not loc['occupant'] == None:
@@ -84,18 +104,21 @@ def handleBattle(loc, p):
                         if (monster['health'] <= 0):
                             print("You killed the " + monster['desc'] + "!")
                             loc['occupant'] = None
-                            loc['inventory'] = "a dead monster"
+                            addInventory(loc, "a dead "+monster['desc'])
                             battle = False
                     else:
                         # player has advantage
                         monster['health'] = monster['health'] - p['attack']
                         if (monster['health'] <= 0):
                             print("You killed the " + monster['desc'] + "!")
+                            loc['occupant'] = None
+                            addInventory(loc, "a dead "+monster['desc'])
                             battle = False
-                        p['health'] = p['health'] - monster['attack']
-                        if (p['health'] <= 0) :
-                            print("You died.")
-                            sys.exit(0);
+                        else:
+                            p['health'] = p['health'] - monster['attack']
+                            if (p['health'] <= 0) :
+                                print("You died.")
+                                sys.exit(0);
 
                 elif cmd == 'dodge' :
                     print("you dodge")
@@ -104,7 +127,7 @@ def handleBattle(loc, p):
                     print("you defend")
                 elif cmd == 'focus' :
                     # more stuff
-                    print("you sit down with your pocket calculator and focus")
+                    print("you sit down with your " + equippedItem(player) + " and focus")
                 elif cmd == 'flee' :
                     if monster['speed'] > p['speed']:
                         print("Sorry, your adversary is too fast for you")
@@ -142,13 +165,14 @@ while stillPlaying:
     if (cmd == 'inventory') :
         print(monsters.player['desc'])
         print ("you have:")
-        for i in range(len(inventory)):
-            print (str(i) + ": " + inventory[i])
-        print ("you have equipped your " + inventory[equipped])
+        for i in range(len(player['inventory'])):
+            print (str(i) + ": " + player['inventory'][i])
+        print ("you have equipped your " + equippedItem(player))
     elif (cmd == 'look') :
         describeLocation(location)
     elif (cmd == 'equip'):
         equipped = int(words[1])
+        print("you have equipped your " + equippedItem(player))
     elif (cmd == 'quit') :
         print("Sorry to see you go.")
         stillPlaying = False
@@ -160,8 +184,10 @@ while stillPlaying:
             location['seen'] = True
             makeOccupants(location)
             describeLocation(location)
+    elif (cmd == 'take') :
+        take(location, player, words[1])
     elif (cmd == 'help') :
-        print("inventory, walk, equip, look are things you can do, also quit.")
+        print("inventory, walk, equip, look, take are things you can do, also quit.")
     else :
         print("I don't know what you mean")
 
