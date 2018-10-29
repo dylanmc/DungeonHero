@@ -1,34 +1,13 @@
-
-rooms = {
-    "entrance_r": {
-        'desc' : "You are in the entrance to a huge cave system. The way you entered has collapsed behind you."
-        , 'passages' : { "north": "passage_r" }
-        , 'occupants': True
-        , 'hostile' : False
-        }
-    , "passage_r": {
-        'desc' : "This is a long low north-south passage"
-        , 'passages' : {
-            "south": "entrance_r"
-            , "north": "grand_chamber_r"
-            }
-        , 'occupants': True
-        , 'hostile': True
-        }
-    , "grand_chamber_r": {
-        'desc' : "You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions."
-        , 'passages' : {
-            "south": "passage_r"
-            , "north": "crossroads_r"
-            }
-        , 'occupants': True
-        , 'hostile': True
-        }
-    , "crossroads_r": {
-        'desc' : "You enter a large, high-ceilinged room. There is a dead knight in one corner."
-        , 'passages' : {
-            "south": "grand_chamber_r"
-        }
-        , 'make_occupant':'ogre'
-    }
+rooms = {    'entrance_r' : {'desc': 'You are in the entrance to a huge cave system. The way you entered has collapsed behind you.', 'passages': {'north': 'passage_r'}, 'occupants': True, 'hostile': False, 'tag': 'entrance_r'},
+    'passage_r' : {'desc': 'This is a long low north-south passage', 'passages': {'south': 'entrance_r', 'north': 'grand_chamber_r'}, 'occupants': True, 'hostile': True},
+    'grand_chamber_r' : {'desc': 'You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions.', 'passages': {'south': 'passage_r', 'north': 'crossroads_r', 'northwest': 'goblin_mace', 'northeast': 'goblid_shortsword', 'southwest': 'goblin_musket', 'southeast': 'goblin_greatsword'}, 'occupants': True, 'hostile': True},
+    'crossroads_r' : {'desc': 'You enter a large, high-ceilinged room. There is a dead knight in one corner.', 'passages': {'south': 'grand_chamber_r', 'west': 'dank_passage', 'east': 'puzzle_passage', 'north': 'high_corridor'}, 'make_occupant': 'ogre'},
+    'goblin_mace' : {'desc': 'This is an empty room except for the goblin squatting on a mace', 'passages': {'southeast': {'desc': 'You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions.', 'passages': {'south': 'passage_r', 'north': 'crossroads_r', 'northwest': 'goblin_mace', 'northeast': 'goblid_shortsword', 'southwest': 'goblin_musket', 'southeast': 'goblin_greatsword'}, 'occupants': True, 'hostile': True}}},
+    'goblid_shortsword' : {'desc': 'This is an empty room except for the goblin squatting on a rusty short sword', 'passages': {'southwest': {'desc': 'You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions.', 'passages': {'south': 'passage_r', 'north': 'crossroads_r', 'northwest': 'goblin_mace', 'northeast': 'goblid_shortsword', 'southwest': 'goblin_musket', 'southeast': 'goblin_greatsword'}, 'occupants': True, 'hostile': True}}},
+    'goblin_musket' : {'desc': 'This is an empty room except for the goblin squatting on a musket', 'passages': {'northeast': {'desc': 'You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions.', 'passages': {'south': 'passage_r', 'north': 'crossroads_r', 'northwest': 'goblin_mace', 'northeast': 'goblid_shortsword', 'southwest': 'goblin_musket', 'southeast': 'goblin_greatsword'}, 'occupants': True, 'hostile': True}}},
+    'goblin_greatsword' : {'desc': 'This is an empty room except for the goblin squatting on a great sword', 'passages': {'northwest': {'desc': 'You stumble in to a grand chamber, dimly lit by phosphorescent rocks around its perimeter. You can make out a number of passages leading off in various directions.', 'passages': {'south': 'passage_r', 'north': 'crossroads_r', 'northwest': 'goblin_mace', 'northeast': 'goblid_shortsword', 'southwest': 'goblin_musket', 'southeast': 'goblin_greatsword'}, 'occupants': True, 'hostile': True}}},
+    'dank_passage' : {'desc': 'This is an empty, dank and dusty east/west passage.', 'passages': {'east': 'crossroads_r'}},
+    'puzzle_passage' : {'desc': 'This is an empty east/west passage. It smells a bit puzzling.', 'passages': {'west': 'crossroads_r', 'east': 'puzzle_room'}},
+    'high_corridor' : {'desc': 'You enter a high-ceilinged north/south corridor.', 'passages': {'south': 'crossroads_r'}},
+    'puzzle_room' : {'desc': 'You enter a room filled with puzzling contraptions and levers.', 'passages': {'west': {'desc': 'This is an empty east/west passage. It smells a bit puzzling.', 'passages': {'west': 'crossroads_r', 'east': 'puzzle_room'}}}},
 }

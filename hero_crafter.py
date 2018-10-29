@@ -15,7 +15,14 @@ equipped = 0
 timePassed = False
 battle = False
 playerHealth = 10
-location = cave_map.rooms["entrance_r"]
+
+def getRoom(rooms, name):
+    ret = rooms[name]
+    ret['tag'] = name
+    return ret
+
+location = getRoom(cave_map.rooms, "entrance_r")
+
 monster = None
 player = monsters.player
 
@@ -67,12 +74,17 @@ try:
                 print("there's already a passageway in that direction")
                 continue
             desc = input("Give me a detailed description of the room: ")
+            old_room_id = location['tag']
             new_room_id = input("Give me a one-word name for the room ")
             location['passages'][dir] = new_room_id
-            cave_map.rooms[new_room_id] = { 'desc' : desc, 'passages' : { rev_dir : location }}
+            cave_map.rooms[new_room_id] = { 'desc' : desc, 'passages' : { rev_dir : old_room_id }}
         elif (cmd == 'save') :
             fileh = open(words[1], 'w')
-            out_str = "rooms = " + str(cave_map.rooms)
+            out_str = "rooms = {"
+            for r in cave_map.rooms:
+                out_str += "    '" + str(r) + "' : " + str(cave_map.rooms[r]) + ",\n"
+            out_str = out_str + "}\n"
+           #/ + str(cave_map.rooms)
             fileh.write(out_str)
             fileh.close()
 
